@@ -1,0 +1,72 @@
+Universe
+
+-   外觀
+
+    -   類似文字雲的形式, 畫面上會有很多球組成球雲, 並繞著中心旋轉.
+
+    -   中心的顏色預設是黃色, 其他球的顏色預設是藍色.
+
+    -   球雲會朝向遠離滑鼠的方向旋轉.
+
+        -   假設滑鼠在球雲的正右方, 從正上方俯視, 球雲會以順時針方向旋轉.
+
+    -   離螢幕較遠的球會變得比較透明.
+
+    -   畫面左方有一個列表, 列出當前的球量、當前的形狀、已實作出來的形狀、以及其他的功能.
+
+-   操作按鍵
+
+    -   數字鍵  選擇形狀
+
+    -   PgUp    增加一顆球
+
+    -   PgDn    減少一顆球
+
+    -   Home    慢慢增加球數至 600
+
+    -   End     慢慢減少球數至 3
+
+    -   Esc     停止 Home/End 效果
+
+    -   enter   動態變化為使用者選擇的形狀
+
+    -   space   暫停旋轉
+
+    -   d       直接把球雲數量減至 3 顆
+
+    -   c       動態改變球雲色彩
+
+-   外觀設定值 (CSS 相關)
+
+    -   point (class)
+
+        -   width: 30px
+
+        -   height: 30px
+
+        -   border-radius: 15px;
+
+    -   中心
+
+        -   background-color: yellow
+
+        -   class: point
+
+    -   星星
+
+        -   background-color: blue
+
+        -   class: point
+
+    -   球雲
+
+        -   預設半徑: 200px
+
+    -   字體
+
+        -   consolas
+
+    -   背景
+
+        -   background-color: black
+

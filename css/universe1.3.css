@@ -1,0 +1,57 @@
+* {
+    margin:0px;
+    border:0px;
+    padding:0px;
+    font-family:consolas;
+}
+
+body {
+    background:black;
+    overflow:hidden;
+}
+
+#sky {
+    position:relative;
+    margin:auto;
+    width:800px;
+    height:600px;
+}
+
+.point {
+    position:absolute;
+    width:30px;
+    height:30px;
+    border-radius:15px;
+}
+
+.star {
+    background:blue;
+}
+
+#center {
+    background:yellow;
+}
+
+#amountInfo {
+    position:absolute;
+    top:0px;
+    left:0px;
+    font-size:25px;
+    color:white;
+}
+
+#shape {
+    position:absolute;
+    top:50px;
+    left:0px;
+    font-size:25px;
+    color:white;
+}
+
+#funcList {
+    position:absolute;
+    top:100px;
+    left:0px;
+    font-size:25px;
+    color:white;
+}

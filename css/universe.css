@@ -1,0 +1,54 @@
+* {
+    margin:0px;
+    border:0px;
+    padding:0px;
+    font-family:consolas;
+}
+body {
+    background:black;
+}
+#sky {
+    position:relative;
+    margin:auto;
+    width:800px;
+    height:600px;
+    background:black;
+}
+#mousemask {
+    width:100%;
+    height:100%;
+    z-index:512;
+    background:black;
+}
+.point {
+    position:absolute;
+    width:30px;
+    height:30px;
+    border-radius:15px;
+}
+.star {
+    background:blue;
+}
+#center {
+    background:yellow;
+}
+#amount {
+    position:absolute;
+    top:0px;
+    left:0px;
+    font-size:25px;
+    color:white;
+}
+#shape {
+    position:absolute;
+    top:50px;
+    left:0px;
+    font-size:25px;
+    color:white;
+}
+#shapeList {
+    position:absolute;
+    top:100px;
+    font-size:25px;
+    color:white;
+}
