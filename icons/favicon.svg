@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg x="0pt" y="0pt" width="800pt" height="800pt" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g id="1">
+    <title>Layer 1</title>
+    <linearGradient x1="400" y1="-8.52651e-14" x2="400" y2="800" gradientUnits="userSpaceOnUse" id="4">
+      <stop style="stop-color:#494949;stop-opacity:1;"/>
+      <stop offset="1" style="stop-color:#000000;stop-opacity:1;"/>
+    </linearGradient>
+    <defs>
+      <title>Path</title>
+      <g id="2">
+        <defs>
+          <path id="3" d="M3.05176e-05,0 C3.05176e-05,0,800,-1.7053e-13,800,-1.7053e-13 C800,-1.7053e-13,800,800,800,800 C800,800,3.05176e-05,800,3.05176e-05,800 C3.05176e-05,800,3.05176e-05,0,3.05176e-05,0 z"/>
+        </defs>
+        <use xlink:href="#3" style="fill:url(#4);fill-opacity:1;fill-rule:evenodd;opacity:1;stroke:none;"/>
+        <use xlink:href="#3" style="fill:none;opacity:1;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:0;stroke-width:1;"/>
+      </g>
+    </defs>
+    <use xlink:href="#2"/>
+    <linearGradient x1="317.294" y1="137.562" x2="356.497" y2="322.705" gradientUnits="userSpaceOnUse" id="7">
+      <stop offset="0.504464" style="stop-color:#ffffff;stop-opacity:1;"/>
+      <stop offset="1" style="stop-color:#c3c3c3;stop-opacity:1;"/>
+    </linearGradient>
+    <defs>
+      <title>Shape 75</title>
+      <g id="5">
+        <defs>
+          <path id="6" d="M474.859,65.9355 C474.842,65.6766,474.985,67.6091,475.177,70.251 C475.177,70.251,487.941,262.531,487.941,262.531 C488.093,265.085,481.466,266.978,473.144,266.772 C473.144,266.772,150.543,269.451,150.543,269.451 C142.469,269.793,139.489,268.092,143.882,265.638 C143.882,265.638,467.642,81.169,467.642,81.169 C471.999,78.6375,475.518,76.375,475.501,76.1165 C475.501,76.1165,474.859,65.9355,474.859,65.9355 z"/>
+        </defs>
+        <use xlink:href="#6" style="fill:url(#7);fill-opacity:1;fill-rule:evenodd;opacity:1;stroke:none;"/>
+        <use xlink:href="#6" style="fill:none;opacity:1;stroke:#000000;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:0;stroke-opacity:0;stroke-width:1;"/>
+      </g>
+    </defs>
+    <use xlink:href="#5"/>
+    <linearGradient x1="524.227" y1="222.08" x2="297.935" y2="762.439" gradientUnits="userSpaceOnUse" id="10">
+      <stop offset="0.475446" style="stop-color:#ffffff;stop-opacity:1;"/>
+      <stop offset="1" style="stop-color:#c3c3c3;stop-opacity:1;"/>
+    </linearGradient>
+    <defs>
+      <title>Smart Rectangle</title>
+      <g id="8">
+        <defs>
+          <path id="9" d="M680.307,693.144 C680.307,697.562,676.726,701.144,672.307,701.144 C672.307,701.144,149.854,701.144,149.854,701.144 C145.436,701.144,141.854,697.562,141.854,693.144 C141.854,693.144,141.854,291.375,141.854,291.375 C141.854,286.956,145.436,283.375,149.854,283.375 C149.854,283.375,672.307,283.375,672.307,283.375 C676.726,283.375,680.307,286.956,680.307,291.375 C680.307,291.375,680.307,693.144,680.307,693.144 z"/>
+        </defs>
+        <use xlink:href="#9" style="fill:url(#10);fill-opacity:1;fill-rule:nonzero;opacity:1;stroke:none;"/>
+        <use xlink:href="#9" style="fill:none;opacity:1;stroke:#000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:0;stroke-width:1;"/>
+      </g>
+    </defs>
+    <use xlink:href="#8"/>
+  </g>
+</svg>
