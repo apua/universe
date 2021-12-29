@@ -14,9 +14,6 @@
     <meta name="apple-mobile-web-app-title" content="Universe">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
-    <!-- support dark/light theme -->
-    <meta name="color-scheme" content="dark light">
-
     <!-- not use `theme-color`; just let Safari auto detect -->
     <!-- meta name="theme-color" content="#4285f4" -->
 
@@ -31,6 +28,26 @@
     <meta property="og:title" content="title">
     <meta property="og:description" content="Blah blan blan ...">
     <meta property="og:image" content="https://developer.mozilla.org/mdn-social-share.0ca9dbda.png">
+
+    <!-- specify color-scheme compatible -->
+    <meta name="color-scheme" content="dark light">
+    <link rel="stylesheet" href="/darkmode.css">
+
+    <style>
+    .center { background-color: yellow; }
+    .star { background-color: blue; }
+    .point {
+      position: absolute;
+      width: 30px; height: 30px; border-radius: 50%; /* draw circle where r = 30px */
+    }
+    #sky {
+      position: relative; /* be "containing block" for children positioning */
+      isolation: isolate; /* create "stacking context" for z-index of children */
+      background-color: rgba(0,0,0,0.5);
+      width: auto; /* fit width to screen width dynamically */
+      padding-bottom: 100%; /* make height equal to width dynamically */
+    }
+    </style>
   </head>
   <body>
     <div>
@@ -50,6 +67,19 @@
         <option value="7">escherian-knot</option>
       </select>
     </div>
-    <div><!-- Stars here --></div>
+    <div id="sky">
+      <div class="point center" style="top: 50%; left: 50%;"></div>
+      <div class="point star" style="top: 495.718px; left: 270.463px; z-index: 28; opacity: 0.481112;"></div>
+      <div class="point star" style="top: 459.204px; left: 202.545px; z-index: 71; opacity: 0.553017;"></div>
+      <div class="point star" style="top: 291.131px; left: 329.111px; z-index: -197; opacity: 0.103881;"></div>
+      <div class="point star" style="top: 127.157px; left: 199.509px; z-index: 5; opacity: 0.441971;"></div>
+      <div class="point star" style="top: 380.003px; left: 445.677px; z-index: 111; opacity: 0.618759;"></div>
+      <div class="point star" style="top: 230.889px; left: 467.568px; z-index: -84; opacity: 0.292458;"></div>
+      <div class="point star" style="top: 463.723px; left: 395.153px; z-index: -64; opacity: 0.326084;"></div>
+      <div class="point star" style="top: 250.754px; left: 491.869px; z-index: -27; opacity: 0.387347;"></div>
+      <div class="point star" style="top: 417.289px; left: 143.329px; z-index: -41; opacity: 0.364668;"></div>
+      <div class="point star" style="top: 137.206px; left: 193.849px; z-index: -47; opacity: 0.354628;"></div>
+      <div class="point star" style="top: 496.941px; left: 318.47px; z-index: -29; opacity: 0.384089;"></div>
+    </div>
   </body>
 </html>
