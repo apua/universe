@@ -31,7 +31,16 @@
 
     <!-- specify color-scheme compatible -->
     <meta name="color-scheme" content="dark light">
-    <link rel="stylesheet" href="/darkmode.css">
+
+    <!-- dark if is light mode -->
+    <style>
+    @media (prefers-color-scheme: light) {
+        :root { color-scheme: dark; }
+    }
+    @supports not (color-scheme: dark) {
+        :root { background-color: #1E1E1E; color: white; }
+    }
+    </style>
 
     <style>
     #sky {

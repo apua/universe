@@ -1,7 +1,0 @@
-/* even if the env is light mode, make it render as in dark mode */
-@media (prefers-color-scheme: light) {
-    :root { color-scheme: dark; }
-}
-@supports not (color-scheme: dark) {
-    :root { background-color: #1E1E1E; color: white; }
-}
