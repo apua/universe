@@ -66,10 +66,10 @@
 
     <script type="module">
     import { supports } from "./core.js";
-    let frag = document.getElementById("shape-option").content;
-    let tmpl = frag.firstElementChild;
+    const frag = document.getElementById("shape-option").content;
+    const tmpl = frag.firstElementChild;
     frag.replaceChildren(...supports.map((v,i) => {
-      let opt = tmpl.cloneNode();
+      const opt = tmpl.cloneNode();
       opt.value = i;
       opt.text = v;
       return opt;
