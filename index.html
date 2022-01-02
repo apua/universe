@@ -96,14 +96,21 @@
       </style>
       <div class="sky">
         <div class="point center"></div>
-        <div class="stars">
+        <template>
           <div class="point" style="top: 1px; left: 1px; z-index: 1; opacity: 1;"></div>
-        </div>
+        </template>
+        <div class="stars"></div>
       </div>
     </template>
     <div id="universe"></div>
     <script type="module">
-    document.getElementById("universe").attachShadow({mode:"open"}).append(document.getElementById("universe-tmpl").content)
+    import { main } from "./core.js";
+
+    const universe = document.getElementById("universe");
+    const root = universe.attachShadow({mode:"open"});
+    root.append(document.getElementById("universe-tmpl").content);
+
+    main(root);
     </script>
   </body>
 </html>
