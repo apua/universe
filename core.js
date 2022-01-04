@@ -4,7 +4,15 @@
  * -  UI setting shoud be moved to JS
  * -  handle input string to number; parseInt, NaN
  * -  opacity max is 2/3 now, could be adjusted while it is linear.
+ * -  how to keep or drop input settings after refresh
+ * -  logger disabling
  */
+
+window.__DEBUG__ = true;
+
+const debug = (...args) => { __DEBUG__ && console.debug(...args) };
+const table = (...args) => { __DEBUG__ && console.table(...args) };
+const trace = (...args) => { __DEBUG__ && console.trace(...args) };
 
 const start_animate = (f, min_slot_millisecond) => {
     const step = timestamp => {
@@ -32,7 +40,40 @@ const wasm = {
     shrink: N => {
         points.splice(points.length-N,N);
     },
-    next_points: () => points.map(([px,py,pz], i) => {
+    next_points: () => wasm.move_points(),
+    transform: (new_points, steps, post_actions) => {
+        debug(new_points.length, steps, S);
+        const delta = new_points.map(([nx,ny,nz],i) => {
+            const [px,py,pz] = points[i];
+            return [(nx-px)/steps, (ny-py)/steps, (nz-pz)/steps];
+        });
+        new_points = points;
+        function* g() {
+            for (let s=steps; s--;) {
+                debug("transform step", s);
+                new_points = new_points.map(([px,py,pz],i) => {
+                    const [dx,dy,dz] = delta[i];
+                    return [px+dx, py+dy, pz+dz];
+                });
+                yield new_points;
+            }
+        }
+        const gg = g();
+        return () => { /* transform by steps */
+            debug("closure has been called");
+            const {value, done} = gg.next();
+            if (done) {
+                post_actions();
+                return wasm.move_points();
+            } else {
+                return value.map(([_px,_py,_pz], i) => {
+                    points[i] = [_px, _py, _pz];
+                    return [_py+MR-PR, _px+MR-PR, Number.parseInt(_pz), (_pz+R) / (3*R) + 0.1];
+                });
+            }
+        };
+    },
+    move_points: () => points.map(([px,py,pz], i) => {
         const
           sqrt = Math.sqrt, rotateSpeed = 0.03, mousex = 80, mousey = 60,
           cosb = Math.cos(rotateSpeed),
@@ -133,6 +174,14 @@ export const main = (root) => {
     };
     handlers.shape_change = event => {
         S = wasm.supports[event.target.value];
+        const gen = wasm.gencoords[S];
+        const new_points = points.map(gen);
+
+        amount_input.disabled = true;
+        wasm.next_points = wasm.transform(new_points, 50, () => {
+            wasm.next_points = wasm.move_points;
+            amount_input.disabled = false;
+        });
         console.log("shape", S);
     };
 
