@@ -161,12 +161,14 @@ const gen_color = (function*(){
 
 export const supports = wasm.supports;
 export const main = (root) => {
+    root.styleSheets[0].insertRule(`.point{width:30px;height:30px;}`);
+
     // common local constants
     const amount_input = document.getElementById("amount");
     const shape_input = document.getElementById("shape");
 
     // set global once among mulitple impl
-    MR = root.querySelector(".sky").offsetWidth * 0.5;
+    MR = root.getElementById("sky").offsetWidth * 0.5;
     R = MR * 0.9;
     PR = root.querySelector(".point").offsetWidth * 0.5;
     S = wasm.supports[shape.value];
@@ -195,8 +197,8 @@ export const main = (root) => {
     };
 
     // * design and hook properties/methods onto `stars`
-    const stars = root.querySelector("div.stars");
-    stars.tmpl = root.querySelector("template").content.firstElementChild;
+    const stars = root.getElementById("stars");
+    stars.tmpl = root.getElementById("star").content.firstElementChild;
     stars.draw = () => {
         // NOTE:
         //   Element.children is bad on indexing, good on iteration
@@ -215,7 +217,8 @@ export const main = (root) => {
     stars.shrink = N => { for (let i=N; i--; ) stars.lastElementChild.remove(); };
 
     // * add points by amount
-    root.querySelector(".center").style = `top: ${MR-PR}px; left: ${MR-PR}px`;
+    root.getElementById("center").style = `top: ${MR-PR}px; left: ${MR-PR}px`;
+    root.getElementById("center").style.backgroundColor = "yellow";
     wasm.extend(+amount_input.value);
     stars.extend(+amount_input.value);
 
