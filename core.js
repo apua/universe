@@ -1,11 +1,12 @@
 /*
- * TODO:
  * -  point radius should be constant in JS
- * -  UI setting shoud be moved to JS
- * -  handle input string to number; parseInt, NaN
  * -  opacity max is 2/3 now, could be adjusted while it is linear.
  * -  how to keep or drop input settings after refresh
  * -  logger disabling
+ * TODO:
+ * -  UI setting shoud be moved to JS
+ * -  handle input string to number; parseInt, NaN
+ * -  how about modify CSS rule directly
  */
 
 window.__DEBUG__ = true;
@@ -40,7 +41,7 @@ const wasm = {
     shrink: N => {
         points.splice(points.length-N,N);
     },
-    next_points: () => wasm.move_points(),
+    next_points: () => wasm.move_points(),  //FIXME it doesn't provide init points
     transform: (new_points, steps, post_actions) => {
         debug(new_points.length, steps, S);
         const delta = new_points.map(([nx,ny,nz],i) => {
@@ -150,6 +151,14 @@ let T, L;
 const handlers = {};
 let PR; // point radius
 
+const gen_color = (function*(){
+  for(;;) {
+    for (let g=0, b=255; b; g+=5, b-=5) { yield [0,g,b]; }
+    for (let r=0, g=255; g; r+=5, g-=5) { yield [r,g,0]; }
+    for (let b=0, r=255; r; b+=5, r-=5) { yield [r,0,b]; }
+  }
+})();
+
 export const supports = wasm.supports;
 export const main = (root) => {
     // common local constants
@@ -192,11 +201,13 @@ export const main = (root) => {
         // NOTE:
         //   Element.children is bad on indexing, good on iteration
         //   Array is good on indexing
+        const [r,g,b] = gen_color.next().value, color = `rgb(${r},${g},${b})`;
         const ps = wasm.next_points();
         let i = 0;
         for (let v of stars.children) {
             const p = ps[i];
-            v.style = `top: ${p[0]}px; left: ${p[1]}px; z-index: ${p[2]}; opacity: ${p[3]};`;
+            v.style = `top: ${p[0]}px; left: ${p[1]}px; z-index: ${p[2]}; opacity: ${p[3]};`
+                      + ` background-color: ${color};`;
             i += 1;
         }
     };
