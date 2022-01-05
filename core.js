@@ -12,21 +12,6 @@
 window.__DEBUG__ = true;
 
 const debug = (...args) => { __DEBUG__ && console.debug(...args) };
-const table = (...args) => { __DEBUG__ && console.table(...args) };
-const trace = (...args) => { __DEBUG__ && console.trace(...args) };
-
-const start_animate = (f, min_slot_millisecond) => {
-    const step = timestamp => {
-        if (timestamp - lasttime > min_slot_millisecond) {
-            lasttime = timestamp;
-            f();
-        }
-        requestAnimationFrame(step);
-    };
-    let lasttime = 0;
-    f();
-    requestAnimationFrame(step);
-};
 
 const points = [];
 window.points = points;
@@ -148,7 +133,6 @@ let MR; // margin
 let R; // radius
 let S; // shape
 let T, L;
-const handlers = {};
 let PR; // point radius
 
 const gen_color = (function*(){
@@ -157,75 +141,43 @@ const gen_color = (function*(){
     for (let r=0, g=255; g; r+=5, g-=5) { yield [r,g,0]; }
     for (let b=0, r=255; r; b+=5, r-=5) { yield [r,0,b]; }
   }
-})();
+});
+
+export const init_model = ({
+        margin_offset_width,
+        stars_radius_ratio,
+        point_radius,
+        shape_id,
+        }) => {
+    MR = margin_offset_width * 0.5;
+    R = MR * stars_radius_ratio;
+    PR = point_radius;
+    S = wasm.supports[shape_id];
+
+    model.point_radius = PR;
+    model.center_position = [MR-PR, MR-PR];
+};
 
 export const supports = wasm.supports;
-export const main = (root) => {
-    root.styleSheets[0].insertRule(`.point{width:30px;height:30px;}`);
 
-    // common local constants
-    const amount_input = document.getElementById("amount");
-    const shape_input = document.getElementById("shape");
 
-    // set global once among mulitple impl
-    MR = root.getElementById("sky").offsetWidth * 0.5;
-    R = MR * 0.9;
-    PR = root.querySelector(".point").offsetWidth * 0.5;
-    S = wasm.supports[shape.value];
-    handlers.amount_change = event => {
-        const new_ = +event.target.value;
-        const orig = stars.childElementCount;
-        if (new_ > orig) {
-            const N = new_ - orig; wasm.extend(N); stars.extend(N); console.log(`extend by ${N}`);
-        } else if (new_ < orig) {
-            const N = orig - new_; stars.shrink(N); wasm.shrink(N); console.log(`shrink by ${N}`);
-        } else {
-            throw new Error("input \"amount\" doesn't change but event triggered");
-        }
-    };
-    handlers.shape_change = event => {
-        S = wasm.supports[event.target.value];
-        const gen = wasm.gencoords[S];
-        const new_points = points.map(gen);
-
-        amount_input.disabled = true;
-        wasm.next_points = wasm.transform(new_points, 50, () => {
-            wasm.next_points = wasm.move_points;
-            amount_input.disabled = false;
-        });
-        console.log("shape", S);
-    };
-
-    // * design and hook properties/methods onto `stars`
-    const stars = root.getElementById("stars");
-    stars.tmpl = root.getElementById("star").content.firstElementChild;
-    stars.draw = () => {
-        // NOTE:
-        //   Element.children is bad on indexing, good on iteration
-        //   Array is good on indexing
-        const [r,g,b] = gen_color.next().value, color = `rgb(${r},${g},${b})`;
-        const ps = wasm.next_points();
-        let i = 0;
-        for (let v of stars.children) {
-            const p = ps[i];
-            v.style = `top: ${p[0]}px; left: ${p[1]}px; z-index: ${p[2]}; opacity: ${p[3]};`
-                      + ` background-color: ${color};`;
-            i += 1;
-        }
-    };
-    stars.extend = N => { for (let i=N; i--; ) stars.append(stars.tmpl.cloneNode()); };
-    stars.shrink = N => { for (let i=N; i--; ) stars.lastElementChild.remove(); };
-
-    // * add points by amount
-    root.getElementById("center").style = `top: ${MR-PR}px; left: ${MR-PR}px`;
-    root.getElementById("center").style.backgroundColor = "yellow";
-    wasm.extend(+amount_input.value);
-    stars.extend(+amount_input.value);
-
-    // * observe inputs
-    amount_input.addEventListener("change", handlers.amount_change);
-    shape_input.addEventListener("change", handlers.shape_change);
-
-    // * animate by tick
-    start_animate(stars.draw, 50);
+export const model = {
+    next_points: () => wasm.next_points(),
+    point_radius: null,
+    center_position: null,
+    gen_color: gen_color(),
+    extend: wasm.extend,
+    shrink: wasm.shrink,
+    points: points,
 };
+
+export const set_shape = (shape_id, post_action) => {
+    S = wasm.supports[shape_id];
+    console.log("shape", S);
+    const new_points = points.map(wasm.gencoords[S]);
+
+    wasm.next_points = wasm.transform(new_points, 50, () => {
+        wasm.next_points = wasm.move_points;
+        post_action();
+    });
+}
