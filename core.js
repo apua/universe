@@ -143,23 +143,36 @@ const gen_color = (function*(){
   }
 });
 
-export const init_model = ({
+const init = ({
         margin_offset_width,
         stars_radius_ratio,
         point_radius,
-        shape_id,
+        default_amount,
+        default_shape_id,
         }) => {
     MR = margin_offset_width * 0.5;
     R = MR * stars_radius_ratio;
     PR = point_radius;
-    S = wasm.supports[shape_id];
+    S = wasm.supports[default_shape_id];
 
     model.point_radius = PR;
     model.center_position = [MR-PR, MR-PR];
+    model.default_amount = default_amount;
+    model.default_shape_id = default_shape_id;
+
+    model.extend(default_amount);
 };
 
-export const supports = wasm.supports;
+const set_shape = (shape_id, post_action) => {
+    S = wasm.supports[shape_id];
+    console.log("shape", S);
+    const new_points = points.map(wasm.gencoords[S]);
 
+    wasm.next_points = wasm.transform(new_points, 50, () => {
+        wasm.next_points = wasm.move_points;
+        post_action();
+    });
+}
 
 export const model = {
     next_points: () => wasm.next_points(),
@@ -170,18 +183,14 @@ export const model = {
     shrink: wasm.shrink,
     points: points,
 
+    supports: wasm.supports,
+
     set_amount: (N) => {
-        if (N > 0) wasm.extend(N); else wasm.shrink(-N);
+        const M = N - points.length;
+        if (M > 0) wasm.extend(M); else if (M < 0) wasm.shrink(-M); else;
     },
+
+    init: init,
+    set_shape: set_shape,
 };
 
-export const set_shape = (shape_id, post_action) => {
-    S = wasm.supports[shape_id];
-    console.log("shape", S);
-    const new_points = points.map(wasm.gencoords[S]);
-
-    wasm.next_points = wasm.transform(new_points, 50, () => {
-        wasm.next_points = wasm.move_points;
-        post_action();
-    });
-}

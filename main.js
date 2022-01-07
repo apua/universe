@@ -1,46 +1,62 @@
-/*
- * main script
- */
-
-import { supports, init_model, model, set_shape } from "./core.js";
+import { model } from "./core.js";
 import * as universe from "./universe.js";
 
 const field_amount = document.getElementById("amount");
 const field_shape = document.getElementById("shape");
 
-// set default value to :field:`amount`
-field_amount.value = 16;
+/* disable inputs during init app */
+[field_amount, field_shape].forEach(field => field.disable = true);
 
-// set options to :field:`shape`
-const option = document.getElementById("shape-option").content.firstElementChild;
-field_shape.append(...supports.map((v,i) => {
-    const opt = option.cloneNode();
-    opt.value = i;
-    opt.text = v;
-    return opt;
-}));
-
-// initialize model
-init_model({
+/* init MVC model */
+model.init({
     margin_offset_width: parseInt(document.body.offsetWidth),
     stars_radius_ratio: 0.9,
     point_radius: 15 /* px */,
-    shape_id: field_shape.value,
+    default_amount: 16,
+    default_shape_id: "1",
 });
 
-// initialize universe
-universe.init(model, parseInt(field_amount.value));
-universe.animate(model, 50);
+/* init `amount`:field: */
+field_amount.setAttribute("value", model.default_amount);
+console.assert(parseInt(field_amount.value) === model.default_amount);
 
-// event hook
+/* init `shape`:field: */
+const option = document.getElementById("shape-option").content.firstElementChild;
+field_shape.append(...model.supports.map((v,i) => {
+    const opt = option.cloneNode();
+    opt.value = i;
+    opt.text = v;
+    if (opt.value === model.default_shape_id)  // represent default value to HTML
+        opt.setAttribute("selected", "");
+    return opt;
+}));
+console.assert(field_shape.value === model.default_shape_id);
+
+/* init universe */
+universe.init(model, parseInt(field_amount.value));
+
+/* activate animation to represent model */
+const min_interval= 50 /* ms */;
+let lasttime = 0;
+function frame(timestamp) {
+    if (timestamp - lasttime > min_interval) {
+        lasttime = timestamp;
+        universe.draw(model);
+    }
+    requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* hook events */
 field_amount.addEventListener("change", event => {
-    const new_ = parseInt(event.target.value);
-    const orig = model.points.length;
-    if (new_ == orig)
-        throw new Error("input \"amount\" doesn't change but event triggered");
-    model.set_amount(new_ - orig);
+    model.set_amount(parseInt(event.target.value));
 });
 field_shape.addEventListener("change", event => {
     field_amount.disabled = true;
-    set_shape(event.target.value, () => field_amount.disabled = false);
+    model.set_shape(event.target.value, () => {
+        field_amount.disabled = false;
+    });
 });
+
+/* enable inputs after init app */
+[field_amount, field_shape].forEach(field => field.disable = false);
