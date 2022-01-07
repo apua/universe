@@ -169,6 +169,10 @@ export const model = {
     extend: wasm.extend,
     shrink: wasm.shrink,
     points: points,
+
+    set_amount: (N) => {
+        if (N > 0) wasm.extend(N); else wasm.shrink(-N);
+    },
 };
 
 export const set_shape = (shape_id, post_action) => {

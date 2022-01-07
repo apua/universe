@@ -1,5 +1,3 @@
-//TODO: draw the "fetch" and "load" diagram to show the design
-
 /*
  * main script
  */
@@ -31,7 +29,7 @@ init_model({
 });
 
 // initialize universe
-universe.init(model, parseInt(field_amount.value), field_amount, field_shape);
+universe.init(model, parseInt(field_amount.value));
 universe.animate(model, 50);
 
 // event hook
@@ -40,10 +38,7 @@ field_amount.addEventListener("change", event => {
     const orig = model.points.length;
     if (new_ == orig)
         throw new Error("input \"amount\" doesn't change but event triggered");
-    const [N, op] = new_>orig ? [new_-orig , "extend"] : [orig-new_ , "shrink"] ;
-    model[op](N);
-    universe[op](N);
-    console.log(`${op} by ${N}`);
+    model.set_amount(new_ - orig);
 });
 field_shape.addEventListener("change", event => {
     field_amount.disabled = true;
