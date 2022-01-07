@@ -33,7 +33,7 @@ field_shape.append(...model.supports.map((v,i) => {
 console.assert(field_shape.value === model.default_shape_id);
 
 /* init universe */
-universe.init(model, parseInt(field_amount.value));
+universe.init(model);
 
 /* activate animation to represent model */
 const min_interval= 50 /* ms */;

@@ -1,8 +1,7 @@
-let root, stars, star_tmpl;
+let stars, star_tmpl;
 
-export function init(model, amount) {
-    // create shadow root onto universe
-    root = document.getElementById("universe").attachShadow({mode: "closed"});
+export function init(model) {
+    const root = document.getElementById("universe").attachShadow({mode: "closed"});
     root.append(document.getElementById("universe-shadowroot").content);
     root.styleSheets[0].insertRule(`
         .point{
@@ -10,7 +9,6 @@ export function init(model, amount) {
             height: ${model.point_radius * 2}px;
         }
     `);
-    window.root = root;
 
     stars = root.getElementById("stars");
     star_tmpl = root.getElementById("star").content.firstElementChild;
@@ -19,27 +17,22 @@ export function init(model, amount) {
     const [cx,cy] = model.center_position;
     center.style = `top: ${cy}px; left: ${cx}px; background-color: yellow;`;
 
-    // * add points by amount
-    extend(amount);
-
-    //FIXME draw first
-}
-export function extend(N) {
-    for (let i=N; i--;)
-        stars.append(star_tmpl.cloneNode());
-}
-export function shrink(N) {
-    for (let i=N; i--;)
-        stars.lastElementChild.remove();
+    draw(model);
 }
 export function draw(model) {
-    // NOTE:
-    //   Element.children is bad on indexing, good on iteration
-    //   Array is good on indexing
     const [r,g,b] = model.gen_color.next().value, color = `rgb(${r},${g},${b})`;
     const ps = model.next_points();
+
     const N = ps.length - stars.childElementCount;
-    if (N > 0) extend(N); else if (N < 0) shrink(-N);
+    if (N == 0) {}
+    else if (N > 0)
+        for (let i=N; i--;)
+            stars.append(star_tmpl.cloneNode());
+    else /* N < 0 */
+        for (let i=N; i++;)
+            stars.lastElementChild.remove();
+
+    // NOTE: Element.children is bad on indexing, good on iteration; in contrast, Array is good on indexing
     let i = 0;
     for (let v of stars.children) {
         const p = ps[i];
@@ -47,15 +40,4 @@ export function draw(model) {
                   + ` background-color: ${color};`;
         i += 1;
     }
-}
-export function animate (model, min_slot_millisecond) {
-    function step(timestamp) {
-        if (timestamp - lasttime > min_slot_millisecond) {
-            lasttime = timestamp;
-            draw(model);
-        }
-        requestAnimationFrame(step);
-    }
-    let lasttime = 0;
-    requestAnimationFrame(step);
 }
