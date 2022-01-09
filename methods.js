@@ -1,16 +1,17 @@
 /* generate one point in [x,y,z] on ths shape of given radius */
 export class PointGenerators {
+    #R;
     constructor(R) {
-        this.R = R;
+        this.#R = R;
     }
     ring = () => {
-        const R = this.R;
+        const R = this.#R;
         const th = Math.random() * 2 * Math.PI;
         return [R * Math.cos(th), 0, R * Math.sin(th)];
     }
     tetrahedron = () => {
-        const R = this.R;
-        const edge = parseInt(Math.random() * 6);
+        const R = this.#R;
+        const edge = Number.parseInt(Math.random() * 6);
         let v1, v2;
         switch (edge) {
             case 0: v1 = [ R/2,  R/2,  R/2]; v2 = [-R/2, -R/2,  R/2]; break;
@@ -26,8 +27,8 @@ export class PointGenerators {
         const nz = offset * (v2[2] - v1[2]) + v1[2];
         return [nx, ny, nz];
     }
-    escherian_knot = () => {
-        const R = this.R;
+    "escherian-knot" = () => {
+        const R = this.#R;
         const t = Math.random() * 2 * Math.PI;
         const th = 2 * t;
         const phi = ( Math.PI * (Math.cos(3 * t) + 3) ) / 6

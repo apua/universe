@@ -23,16 +23,6 @@ function* rotate_axes(points) {
     }
 }
 
-//function translate_axes_by([cx, cy]) {
-//    return ([x,y, ...vs]) => [x-cx, y-cy, ...vs];
-//}
-//
-//test.add(() => {
-//    const c = [1,1];
-//    const trans = translate_axes_by(c);
-//    assert(trans([3,3,0]).every((v,i) => [2,2,0][i] === v));
-//});
-//
 function opaque_by(R) {
     return z => (z+R)/(3*R)+0.1 ;
 }
@@ -42,52 +32,45 @@ test.add(() => {
     assert(opaque_by(1)(-1) === 0.1);
 });
 
-//function to_style_by([cx,cy], R, color_iter) {
-//    const opaque = z => (z+R)/(3*R)+0.1 ;
-//    return ([px,py,pz]) => [py-cy, px-cx, Number.parseInt(z), opaque(z), color_iter.next().value] ;
-//}
-//
-//test.add(() => {
-//    const f = to_style_by([1,1],1,color_gen())
-//    assert(opaque_by(1)(2) === 1.1);
-//    assert(opaque_by(1)(-1) === 0.1);
-//});
-
 function* style_gen(point_iter, [cx,cy], opaque, color_iter) {
     for (let ps of point_iter)
-        yield ps.map(([x,y,z]) =>
-            [y-cy, x-cx, Number.parseInt(z), opaque(z), color_iter.next().value]
-        );
+        yield [ps.map(([x,y,z]) => [y+cy, x+cx, Number.parseInt(z), opaque(z)]), color_iter.next().value];
 }
 
 const stars_radius_ratio = 0.9;
 const point_radius = 15 /* px */;
 export default class Model extends EventTarget {
-    points = [];
-    point_iter = rotate_axes(this.points);
-
     constructor({amount, shape, margin_offset_width}) {
         super();
 
         console.assert(Number.isInteger(margin_offset_width) && margin_offset_width > 0);
         const shape_radius = margin_offset_width * 0.5 * stars_radius_ratio;
-        this.point_generators = new PointGenerators(shape_radius);
+        const point_generators = new PointGenerators(shape_radius);
+
+        const points = [];
+        const point_iter = rotate_axes(points);
 
         const c = margin_offset_width * 0.5 - point_radius;
-        this.center_position = [c,c];
-        this.style_iter = style_gen(
-            this.point_iter,
-            this.center_position,
-            opaque_by(shape_radius),
-            color_gen(),
-        );
+        const center_position = [c,c];
+        const style_iter = style_gen(point_iter, center_position, opaque_by(shape_radius), color_gen());
 
-        console.assert(shape in this.point_generators);
-        this.gen_point = this.point_generators[shape];
+        console.assert(shape in point_generators);
+        const gen_point = point_generators[shape];
 
+        // generate points by amount
         console.assert(Number.isInteger(amount) && amount > 0);
+        this.points = points;
+        this.gen_point = gen_point;
         this.amount = amount;
 
+        // export iterators
+        this.point_iter = point_iter;
+        this.style_iter = style_iter;
+
+        // export information
+        this.point_radius = point_radius;
+        this.center_position = center_position;
+        this.point_generators = point_generators;
     }
     get amount() {
         return this.points.length;
@@ -130,8 +113,8 @@ test.add(() => {
     assert(model.points.length === 87);
 
     assert(model.gen_point.name === "ring");
-    model.shape = "escherian_knot";
-    assert(model.gen_point.name === "escherian_knot");
+    model.shape = "escherian-knot";
+    assert(model.gen_point.name === "escherian-knot");
 
     let _callback_called = false;
     model.addEventListener("shapechanged", () => {_callback_called = true;});
@@ -150,11 +133,11 @@ test.add(() => {
 test.add(() => {
     const model = new Model({amount: 1, shape: "ring", margin_offset_width: 500});
 
-    let [y,x,z,o,c] = model.style_iter.next().value[0];
+    let [[[y,x,z,o], ..._], c] = model.style_iter.next().value;
     //console.log([y,x,z,o,c]);
     assert([y,x,z,o].every(n => !Number.isNaN(n)));
     assert(c.toString() === "0,0,255");
-    [y,x,z,o,c] = model.style_iter.next().value[0];
+    [[[y,x,z,o], ..._], c] = model.style_iter.next().value;
     //console.log([y,x,z,o,c]);
     assert(c.toString() === "0,5,250");
 });
