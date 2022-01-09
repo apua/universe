@@ -9,7 +9,7 @@ const field_shape = document.getElementById("shape");
 
 /* init MVC model */
 model.init({
-    margin_offset_width: parseInt(document.body.offsetWidth),
+    margin_offset_width: Number.parseInt(document.body.offsetWidth),
     stars_radius_ratio: 0.9,
     point_radius: 15 /* px */,
     default_amount: 42,
@@ -18,7 +18,7 @@ model.init({
 
 /* init `amount`:field: */
 field_amount.setAttribute("value", model.default_amount);
-console.assert(parseInt(field_amount.value) === model.default_amount);
+console.assert(Number.parseInt(field_amount.value) === model.default_amount);
 
 /* init `shape`:field: */ //FIXME: decide name and order here, instead of model
 const option = document.getElementById("shape-option").content.firstElementChild;
@@ -50,7 +50,7 @@ requestAnimationFrame(frame);
 
 /* hook events */
 field_amount.addEventListener("change", event => {
-    model.set_amount(parseInt(event.target.value));
+    model.set_amount(Number.parseInt(event.target.value));
 });
 field_shape.addEventListener("change", event => {
     field_amount.disabled = true;
