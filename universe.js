@@ -33,9 +33,9 @@ export function draw(model) {
             stars.lastElementChild.remove();
 
     // NOTE: Element.children is bad on indexing, good on iteration; in contrast, Array is good on indexing
-    let i = 0;
+    let i = 0, p;
     for (let v of stars.children) {
-        const p = ps[i];
+        p = ps[i];
         v.style = `top: ${p[0]}px; left: ${p[1]}px; z-index: ${p[2]}; opacity: ${p[3]};`
                   + ` background-color: ${color};`;
         i += 1;
