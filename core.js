@@ -1,14 +1,3 @@
-/*
- * -  point radius should be constant in JS
- * -  opacity max is 2/3 now, could be adjusted while it is linear.
- * -  how to keep or drop input settings after refresh
- * -  logger disabling
- * TODO:
- * -  UI setting shoud be moved to JS
- * -  handle input string to number; parseInt, NaN
- * -  how about modify CSS rule directly
- */
-
 window.__DEBUG__ = true;
 
 const debug = (...args) => { __DEBUG__ && console.debug(...args) };

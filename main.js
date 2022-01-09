@@ -12,15 +12,15 @@ model.init({
     margin_offset_width: parseInt(document.body.offsetWidth),
     stars_radius_ratio: 0.9,
     point_radius: 15 /* px */,
-    default_amount: 16,
-    default_shape_id: "1",
+    default_amount: 42,
+    default_shape_id: "0",
 });
 
 /* init `amount`:field: */
 field_amount.setAttribute("value", model.default_amount);
 console.assert(parseInt(field_amount.value) === model.default_amount);
 
-/* init `shape`:field: */
+/* init `shape`:field: */ //FIXME: decide name and order here, instead of model
 const option = document.getElementById("shape-option").content.firstElementChild;
 field_shape.append(...model.supports.map((v,i) => {
     const opt = option.cloneNode();
@@ -31,6 +31,7 @@ field_shape.append(...model.supports.map((v,i) => {
     return opt;
 }));
 console.assert(field_shape.value === model.default_shape_id);
+//FIXME: assert all are available shape names
 
 /* init universe */
 universe.init(model);
@@ -60,3 +61,5 @@ field_shape.addEventListener("change", event => {
 
 /* enable inputs after init app */
 [field_amount, field_shape].forEach(field => field.disable = false);
+
+import Model from "./model.js";
