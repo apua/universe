@@ -15,10 +15,15 @@ const model = new Model({
 });
 
 /* init `amount`:field: */
-field_amount.setAttribute("value", model.amount);
 const navigation_type = performance.getEntriesByType("navigation")[0].type;
-if (navigation_type === "navigate")
+if (navigation_type === "navigate") {
+    console.debug("page navigate");
+    field_amount.setAttribute("value", model.amount);
     console.assert(Number.parseInt(field_amount.value) === model.amount);
+} else if (navigation_type === "reload") {
+    console.debug("page reload");
+    field_amount.value = model.amount;
+} else {}
 
 /* init `shape`:field: */
 const option = document.getElementById("shape-option").content.firstElementChild;
@@ -49,9 +54,15 @@ requestAnimationFrame(frame);
 
 /* hook events */
 field_amount.addEventListener("change", event => {
-    model.amount = Number.parseInt(event.target.value);
+    const value = Number.parseInt(event.target.value);
+    console.debug(`set amount value: ${value}, type: ${typeof value}`);
+    model.amount = value;
+    console.debug(`amount of points: ${model.points.length}`);
+    console.assert(model.points.length === value);
 });
 field_shape.addEventListener("change", event => {
+    const value = event.target.value;
+    console.debug(`set shape name: ${value}, is supported: ${value in model.point_generators}`);
 //    field_amount.disabled = true;
 //    model.set_shape(event.target.value, () => {
 //        field_amount.disabled = false;

@@ -154,8 +154,9 @@ export default class Model extends EventTarget {
         return this.gen_point.name;
     }
     set shape(name) {
-        console.assert(name in this.point_generators);
-        this.gen_point = this.point_generators[name];
+        if (name in this.point_generators) {
+            this.gen_point = this.point_generators[name];
+        } else {}
     }
 };
 
