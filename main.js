@@ -15,12 +15,14 @@ const model = new Model({
 });
 
 /* init `amount`:field: */
-const navigation_type = performance.getEntriesByType("navigation")[0].type;
-if (navigation_type === "navigate") {
+const navigation = performance.getEntriesByType("navigation")[0];
+if (navigation === undefined) { /* mobile, has no refresh case */
+    field_amount.setAttribute("value", model.amount);
+} else if (navigation.type === "navigate") {
     console.debug("page navigate");
     field_amount.setAttribute("value", model.amount);
     console.assert(Number.parseInt(field_amount.value) === model.amount);
-} else if (navigation_type === "reload") {
+} else if (navigation.type === "reload") {
     console.debug("page reload");
     field_amount.value = model.amount;
 } else {}
