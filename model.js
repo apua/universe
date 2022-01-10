@@ -159,9 +159,9 @@ function* rotate_axes(points) {
         cosb = Math.cos(thi);
         sinb = Math.sin(thi);
         yield points.map(([px,py,pz]) => [
-            px * ((x2*cosb+y2)*_a2) + py * ((xy*cosb-xy)*_a2) - pz * (y_a*sinb) ,
+            px * ((x2*cosb+y2)*_a2) + py * ((xy*cosb-xy)*_a2) - pz * (x_a*sinb) ,
             px * ((xy*cosb-xy)*_a2) + py * ((y2*cosb+x2)*_a2) - pz * (y_a*sinb) ,
-            px * (x_a*sinb)         + py * (x_a*sinb)         + pz * (cosb) ,
+            px * (x_a*sinb)         + py * (y_a*sinb)         + pz * (cosb) ,
         ]);
     }
 }
