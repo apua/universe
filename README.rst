@@ -1,29 +1,47 @@
-Universe
-========
+Rewritten Universe
+==================
 
-The original purpose of this project is to build a home page where I can put my staffs.
+.. draw the "fetch" and "load" diagram to show the design
 
-But I like the color settings which is used for test,
-and I have another design of my home page,
-so it became a seperated project.
+main script::
 
-Now I locate this project as an art piece, these stars are beautiful.
+    with app init:
+
+        config model
+        init input fields
+        init universe
+        activate animation
+        hook events
+
+(will) support methods:
+
+    css, svg, canvas, webgl
+
+code structure: main (view, controller, presenter, view model,...), model, encapsulated methods
+
+consideration in this version:
+favicon/pintab icon, web app on mobile, twitter/open graph,
+layout by HTML/CSS (eg define square black sky), dark mode (only, actually), web component,
+assertion as inline doc, a simple unit test framework, MVC, ...
+
+iteration next points, colors
+fixed radius at app starting
+animation frame
+coordinates calculation by matrix
+amount would be kept when browser refresh
 
 
-Users can use the following keys to interact with the stars:
+(then add stars with coorespoding axis ??)
+(optimize arithmetic such as linear opacity by 2/3 ??)
+(type annotation for NaN ???)
 
-Number - Choose shape
-Home - Slowly add to 600 stars (Press Esc to stop)
-End  - Slowly reduce to 3 stars (Press Esc to stop)
-PgUp - Add one star
-PgDn - Reduce one star
-Enter - Change the shape of stars in the sky
-Space - Toggle rotating
-d - Clean stars
-c - Change color
 
-Mouse whell - Change the diameter of the star cloud
+model.js should return class because it requires init (ie constructor)
+model.js should export the class by default
 
-(Based on Keymanager as usual.)
+modularize by logic;
+  browser fetchs modules parallel by listing in HTML,
+  fetch async by import statement,
+  reuse HTTP connection within HTTP/2 .
 
-I Hope you'll like it :)
+invoke event listener to subscribe state (normal <-> slowTrans) change
