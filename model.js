@@ -69,7 +69,6 @@ test.add(() => {
 // on the other hand, optimize the rotate matrix
 const rotateSpeed = 0.03, mousex = 80, mousey = 60;
 function* rotate_axes(points) {
-    yield points;
     const
         x = mousex, y = mousey,
         x2 = x ** 2, y2 = y ** 2, xy = x * y, a2 = x2 + y2, a = Math.sqrt(a2),
@@ -97,14 +96,10 @@ test.add(() => {
     assert(opaque_by(1)(-1) === 0.1);
 });
 
-function* style_gen(point_iter, [cx,cy], opaque, color_iter) {
-    for (let ps of point_iter)
-        yield [ps.map(([x,y,z]) => [y+cy, x+cx, Number.parseInt(z), opaque(z)]), color_iter.next().value];
-}
-
 const stars_radius_ratio = 0.9;
 const point_radius = 15 /* px */;
 export default class Model extends EventTarget {
+    #point_iter;
     constructor({amount, shape, margin_offset_width}) {
         super();
 
@@ -112,25 +107,31 @@ export default class Model extends EventTarget {
         const shape_radius = margin_offset_width * 0.5 * stars_radius_ratio;
         const point_generators = new PointGenerators(shape_radius);
 
-        const points = [];
-        const point_iter = rotate_axes(points);
-
-        const c = margin_offset_width * 0.5 - point_radius;
-        const center_position = [c,c];
-        const style_iter = style_gen(point_iter, center_position, opaque_by(shape_radius), color_gen());
-
+        // initialize point generator
         console.assert(shape in point_generators);
-        const gen_point = point_generators[shape];
+        this.gen_point = point_generators[shape];
 
-        // generate points by amount
+        // initialize points by amount
         console.assert(Number.isInteger(amount) && amount > 0);
+        const points = [];
         this.points = points;
-        this.gen_point = gen_point;
         this.amount = amount;
 
-        // export iterators
-        this.point_iter = point_iter;
-        this.style_iter = style_iter;
+        // initialize point iterator
+        // NOTE: make "switching iterator" internally to prevent broken by direct reference on the iterator
+        //this.point_iter = rotate_axes(points);
+        const _this = this;
+        this.#point_iter = (function*() { yield _this.points; yield* rotate_axes(points) })();
+        this.point_iter = (function* () {for (;;) { yield _this.#point_iter.next().value; }})();
+
+        // initialize color iterator
+        this.color_iter = color_gen();
+
+        // generate "coordinates -> CSS style"
+        const cx = margin_offset_width * 0.5 - point_radius, cy = cx;
+        const center_position = [cx,cy];
+        const opaque = opaque_by(shape_radius);
+        this.to_style = ps => ps.map(([x,y,z]) => [y+cy, x+cx, Number.parseInt(z), opaque(z)]);
 
         // export information
         this.point_radius = point_radius;
@@ -156,6 +157,24 @@ export default class Model extends EventTarget {
     set shape(name) {
         if (name in this.point_generators) {
             this.gen_point = this.point_generators[name];
+            let nx,ny,nz;
+            const steps = 50;
+            const delta = this.points.map(([px,py,pz]) => {
+                [nx,ny,nz] = this.gen_point();
+                return [(nx-px)/steps, (ny-py)/steps, (nz-pz)/steps];
+            });
+
+            let dx,dy,dz;
+            const _this = this;
+            this.#point_iter = (function* () {
+                for (let s=steps; s--;)
+                    yield _this.points = _this.points.map(([px,py,pz],i) => {
+                        [dx,dy,dz] = delta[i];
+                        return [px+dx, py+dy, pz+dz];
+                    });
+                _this.#point_iter = rotate_axes(_this.points);
+                yield _this.#point_iter.next().value;
+            })();
         } else {}
     }
 };
@@ -194,16 +213,4 @@ test.add(() => {
     const p1 = model.points[0];
     const p2 = model.point_iter.next().value[0];
     console.assert(p1.every((v,i) => v === p2[i]));
-});
-
-test.add(() => {
-    const model = new Model({amount: 1, shape: "ring", margin_offset_width: 500});
-
-    let [[[y,x,z,o], ..._], c] = model.style_iter.next().value;
-    //console.log([y,x,z,o,c]);
-    assert([y,x,z,o].every(n => !Number.isNaN(n)));
-    assert(c.toString() === "0,0,255");
-    [[[y,x,z,o], ..._], c] = model.style_iter.next().value;
-    //console.log([y,x,z,o,c]);
-    assert(c.toString() === "0,5,250");
 });

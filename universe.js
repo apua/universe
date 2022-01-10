@@ -1,6 +1,6 @@
 let stars, star_tmpl;
 
-export function init(r, [cx, cy], style_iter) {
+export function init(r, [cx, cy], points_style, color) {
     const root = document.getElementById("universe").attachShadow({mode: "closed"});
     root.append(document.getElementById("universe-shadowroot").content);
     root.styleSheets[0].insertRule(`.point{ width: ${r*2}px; height: ${r*2}px; }`);
@@ -9,10 +9,9 @@ export function init(r, [cx, cy], style_iter) {
     stars = root.getElementById("stars");
     star_tmpl = root.getElementById("star").content.firstElementChild;
 
-    draw(style_iter);
+    draw(points_style, color);
 }
-export function draw(style_iter) {
-    const [ps, [r,g,b]] = style_iter.next().value;
+export function draw(ps, [r,g,b]) {
     const color = `rgb(${r},${g},${b})`;
     const N = ps.length - stars.childElementCount;
     if (N == 0) {}

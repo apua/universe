@@ -38,7 +38,9 @@ for (let k in model.point_generators) {
 console.assert(field_shape.value === model.shape);
 
 /* init universe */
-universe.init(model.point_radius, model.center_position, model.style_iter);
+let points_style = model.to_style(model.point_iter.next().value);
+let color = model.color_iter.next().value;
+universe.init(model.point_radius, model.center_position, points_style, color);
 
 /* activate animation to represent model */
 const min_interval= 50 /* ms */;
@@ -46,7 +48,9 @@ let lasttime = 0;
 function frame(timestamp) {
     if (timestamp - lasttime > min_interval) {
         lasttime = timestamp;
-        universe.draw(model.style_iter);
+        points_style = model.to_style(model.point_iter.next().value);
+        color = model.color_iter.next().value;
+        universe.draw(points_style, color);
     }
     requestAnimationFrame(frame);
 }
@@ -63,6 +67,7 @@ field_amount.addEventListener("change", event => {
 field_shape.addEventListener("change", event => {
     const value = event.target.value;
     console.debug(`set shape name: ${value}, is supported: ${value in model.point_generators}`);
+    model.shape = value;
 //    field_amount.disabled = true;
 //    model.set_shape(event.target.value, () => {
 //        field_amount.disabled = false;
