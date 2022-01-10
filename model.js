@@ -96,6 +96,24 @@ test.add(() => {
     assert(opaque_by(1)(-1) === 0.1);
 });
 
+function* transform(points, gen_point, steps) {
+    let nx,ny,nz;
+    const new_points = points.map(gen_point);
+    const delta = points.map(([px,py,pz], i) => {
+        [nx,ny,nz] = new_points[i];
+        return [(nx-px)/steps, (ny-py)/steps, (nz-pz)/steps];
+    });
+
+    for (let s=steps; s--;) {
+        yield points.forEach(([px,py,pz],i) => {
+            const [dx,dy,dz] = delta[i];
+            points[i] = [px+dx, py+dy, pz+dz];
+        });
+    }
+    points.splice(0);
+    points.push(...new_points);
+}
+
 const stars_radius_ratio = 0.9;
 const point_radius = 15 /* px */;
 export default class Model extends EventTarget {
@@ -157,22 +175,14 @@ export default class Model extends EventTarget {
     set shape(name) {
         if (name in this.point_generators) {
             this.gen_point = this.point_generators[name];
-            let nx,ny,nz;
-            const steps = 50;
-            const delta = this.points.map(([px,py,pz]) => {
-                [nx,ny,nz] = this.gen_point();
-                return [(nx-px)/steps, (ny-py)/steps, (nz-pz)/steps];
-            });
-
-            let dx,dy,dz;
-            const _this = this;
+            const trans_iter = transform(this.points, this.gen_point, 50);
+            const _this = this, rotate_iter = this.#point_iter;
             this.#point_iter = (function* () {
-                for (let s=steps; s--;)
-                    yield _this.points = _this.points.map(([px,py,pz],i) => {
-                        [dx,dy,dz] = delta[i];
-                        return [px+dx, py+dy, pz+dz];
-                    });
-                _this.#point_iter = rotate_axes(_this.points);
+                while (! trans_iter.next().done)
+                    yield rotate_iter.next().value;
+
+                _this.dispatchEvent(new Event("shapechanged"));
+                _this.#point_iter = rotate_iter;
                 yield _this.#point_iter.next().value;
             })();
         } else {}

@@ -67,11 +67,11 @@ field_amount.addEventListener("change", event => {
 field_shape.addEventListener("change", event => {
     const value = event.target.value;
     console.debug(`set shape name: ${value}, is supported: ${value in model.point_generators}`);
+    field_amount.disabled = true;
     model.shape = value;
-//    field_amount.disabled = true;
-//    model.set_shape(event.target.value, () => {
-//        field_amount.disabled = false;
-//    });
+});
+model.addEventListener("shapechanged", event => {
+    field_amount.disabled = false;
 });
 
 /* enable inputs after init app */
