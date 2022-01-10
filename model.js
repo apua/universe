@@ -150,18 +150,27 @@ const rotateSpeed = 0.03, mousex = 80, mousey = 60;
 function* rotate_axes(points) {
     const
         x = mousex, y = mousey,
-        x2 = x ** 2, y2 = y ** 2, xy = x * y, a2 = x2 + y2, a = Math.sqrt(a2),
-        x_a = x/a, y_a = y/a, _a2 = 1/a2,
+        x2 = x ** 2, y2 = y ** 2, xy = x * y, r2 = x2 + y2, r = Math.sqrt(r2),
+        x_r = x/r, y_r = y/r, _r2 = 1/r2,
         _2pi = 2 * Math.PI;
-    let thi = 0, cosb, sinb;
+    let thi = 0, cosb, sinb, a,b,c,d,e,f,g,h,i;
     for (;;) {
         thi = (thi + rotateSpeed) % _2pi;
         cosb = Math.cos(thi);
         sinb = Math.sin(thi);
+
+        [a,b,c,d,e,f,g,h,i] = [ /* rotation matrix */
+            ((x2*cosb+y2)*_r2) , ((xy*cosb-xy)*_r2) , -(x_r*sinb) ,
+            ((xy*cosb-xy)*_r2) , ((y2*cosb+x2)*_r2) , -(y_r*sinb) ,
+            (x_r*sinb)         , (y_r*sinb)         , (cosb) ,
+        ];
+        /* determinant of rotation matrix should (close to) be 1 */
+        //console.debug(a*e*i + b*f*g + c*d*h - c*e*g - b*d*i - a*f*h);
+
         yield points.map(([px,py,pz]) => [
-            px * ((x2*cosb+y2)*_a2) + py * ((xy*cosb-xy)*_a2) - pz * (x_a*sinb) ,
-            px * ((xy*cosb-xy)*_a2) + py * ((y2*cosb+x2)*_a2) - pz * (y_a*sinb) ,
-            px * (x_a*sinb)         + py * (y_a*sinb)         + pz * (cosb) ,
+            px * a + py * b + pz * c,
+            px * d + py * e + pz * f,
+            px * g + py * h + pz * i,
         ]);
     }
 }
