@@ -3,10 +3,89 @@ export class PointGenerators {
     constructor(R) {
         this.#R = R;
     }
+    sphere = () => {
+        const R = this.#R;
+        const th = Math.random() * 2 * Math.PI;
+        const th2 = Math.sqrt(Math.random()) * Math.PI / 2;
+        const half = parseInt(Math.random()*2);
+        let nx,ny,nz;
+        if (half == 0) {
+            nx = R * Math.sin(th2) * Math.cos(th);
+            ny = R * Math.cos(th2);
+            nz = R * Math.sin(th2) * Math.sin(th);
+        } else if (half == 1 || true) {
+            nx = R * Math.sin(th2) * Math.cos(th);
+            ny =-R * Math.cos(th2);
+            nz = R * Math.sin(th2) * Math.sin(th);
+        }
+        return [nx,ny,nz];
+    }
     ring = () => {
         const R = this.#R;
         const th = Math.random() * 2 * Math.PI;
         return [R * Math.cos(th), 0, R * Math.sin(th)];
+    }
+    pie = () => {
+        const R = this.#R;
+        const th = Math.random() * 2 * Math.PI;
+        const dist = Math.sqrt(Math.random()) * R;
+        return [dist * Math.cos(th), 0, dist * Math.sin(th)];
+    }
+    "2ring" = () => {
+        const R = this.#R;
+        const th = Math.random() * 2 * Math.PI;
+        if (Math.random() < 0.5) {
+            return [R * 2 / 3 * Math.cos(th) + R/3, 0, R * 2 / 3 * Math.sin(th)];
+        } else {
+            return [R * 2 / 3 * Math.cos(th) - R/3, R * 2 / 3 * Math.sin(th), 0];
+        }
+    }
+    cage = () => {
+        const R = this.#R;
+        var th = Math.random() * 2 * Math.PI;
+        switch (Number.parseInt(Math.random() * 3)) {
+            case 0: return [0, R * Math.cos(th), R * Math.sin(th)];
+            case 1: return [R * Math.cos(th), 0, R * Math.sin(th)];
+            case 2: return [ R * Math.cos(th), R * Math.sin(th), 0];
+        }
+    }
+    "2cube" = () => {
+        const R = this.#R;
+        const edge = Number.parseInt(Math.random() * 12);
+        const rrsize = Number.parseInt(Math.random() * 3);
+        let rr = R / Math.sqrt(3);
+        if (rrsize == 0) { rr = rr / 2; }
+        const pos = (Math.random() * rr*2) - rr;
+        //console.log(pos);
+        let nx,ny,nz;
+        switch (edge) {
+            case 0:  nx = pos; ny =  rr; nz =  rr; break;
+            case 1:  nx = pos; ny =  rr; nz = -rr; break;
+            case 2:  nx = pos; ny = -rr; nz = -rr; break;
+            case 3:  nx = pos; ny = -rr; nz =  rr; break;
+            case 4:  nx =  rr; ny = pos; nz =  rr; break;
+            case 5:  nx =  rr; ny = pos; nz = -rr; break;
+            case 6:  nx = -rr; ny = pos; nz = -rr; break;
+            case 7:  nx = -rr; ny = pos; nz =  rr; break;
+            case 8:  nx =  rr; ny =  rr; nz = pos; break;
+            case 9:  nx = -rr; ny =  rr; nz = pos; break;
+            case 10: nx = -rr; ny = -rr; nz = pos; break;
+            case 11: nx =  rr; ny = -rr; nz = pos; break;
+        }
+        return [nx, ny, nz];
+    }
+    "2sphere" = () => {
+        const R = this.#R;
+        const ball = parseInt(Math.random() * 2);
+        const rr = R / 2;
+        const cx = (ball == 0) ? R*2/3 : -R*2/3;
+        const th = Math.random() * 2 * Math.PI;
+        const th2 = Math.random() * 2 * Math.PI;
+        let nx,ny,nz;
+        nx = rr * Math.cos(th2) * Math.cos(th) + cx;
+        ny = rr * Math.sin(th2);
+        nz = rr * Math.cos(th2) * Math.sin(th);
+        return [nx, ny, nz];
     }
     tetrahedron = () => {
         const R = this.#R;
@@ -175,7 +254,7 @@ export default class Model extends EventTarget {
     set shape(name) {
         if (name in this.point_generators) {
             this.gen_point = this.point_generators[name];
-            const trans_iter = transform(this.points, this.gen_point, 50);
+            const trans_iter = transform(this.points, this.gen_point, 25);
             const _this = this, rotate_iter = this.#point_iter;
             this.#point_iter = (function* () {
                 while (! trans_iter.next().done)
