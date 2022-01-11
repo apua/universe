@@ -1,6 +1,7 @@
 import Model from "./model.js";
 import * as universe from "./universe.js";
 import * as unicanvas from "./unicanvas.js";
+import * as unisvg from "./unisvg.js";
 
 const field_amount = document.getElementById("amount");
 const field_shape = document.getElementById("shape");
@@ -46,6 +47,7 @@ let points_style = model.to_style(points);
 let color = model.color_iter.next().value;
 universe.init(model.point_radius, model.center_position, points_style, color);
 unicanvas.init(points, color, model.opaque);
+unisvg.init(points, color, model.opaque);
 
 /* activate animation to represent model */
 const min_interval= 50 /* ms */;
@@ -58,6 +60,7 @@ function frame(timestamp) {
         color = model.color_iter.next().value;
         universe.draw(points_style, color);
         unicanvas.draw(points, color);
+        unisvg.draw(points, color);
     }
     requestAnimationFrame(frame);
 }
