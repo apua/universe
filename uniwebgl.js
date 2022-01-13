@@ -16,12 +16,12 @@ export function init (points, color) {
     renderer = new THREE.WebGLRenderer({
         antialias: true,
         canvas: document.getElementById("uniwebgl"),
-        //alpha: true, /* would use alpha channel for translucent */
+        alpha: true, /* would use alpha channel for translucent */
     });
     /* set canvas attributes */
     renderer.setSize(width, height);
     /* set background translucent and black */
-    //renderer.setClearColor("black", 0.5);
+    renderer.setClearColor("black", 0.5);
     
     camera.position.z = width;
 
