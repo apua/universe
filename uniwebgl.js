@@ -7,7 +7,11 @@ window.renderer = undefined;
 export let draw;
 
 export function init (points, color) {
-    camera = new THREE.PerspectiveCamera();
+    const width = document.body.offsetWidth, height = width;
+    const right = width/2, left = -right, top = right, bottom = -top;
+
+    //camera = new THREE.PerspectiveCamera();
+    camera = new THREE.OrthographicCamera(left, right, top, bottom);
     scene = new THREE.Scene();
     renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -15,7 +19,6 @@ export function init (points, color) {
         //alpha: true, /* would use alpha channel for translucent */
     });
     /* set canvas attributes */
-    const width = document.body.offsetWidth, height = width;
     renderer.setSize(width, height);
     /* set background translucent and black */
     //renderer.setClearColor("black", 0.5);
@@ -26,11 +29,11 @@ export function init (points, color) {
     {
       const pointLight = new THREE.PointLight();
       pointLight.position.set(0,0,width);
+      scene.add(pointLight);
 
-      const sphereSize = 15;
-      const pointLightHelper = new THREE.PointLightHelper(pointLight, sphereSize);
-
-      scene.add(pointLight, pointLightHelper);
+      //const sphereSize = 15;
+      //const pointLightHelper = new THREE.PointLightHelper(pointLight, sphereSize);
+      //scene.add(pointLightHelper);
     }
 
     const radius = 15;
