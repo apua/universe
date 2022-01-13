@@ -28,7 +28,8 @@ export function init (points, color) {
     /* create light */
     {
       const pointLight = new THREE.PointLight();
-      pointLight.position.set(0,0,width);
+      pointLight.position.set(0,0,width/2);
+      pointLight.distance = width;
       scene.add(pointLight);
 
       //const sphereSize = 15;
@@ -37,10 +38,15 @@ export function init (points, color) {
     }
 
     const radius = 15;
+    const geometry = new THREE.SphereGeometry(radius);
+    const material = new THREE.MeshBasicMaterial({color: "yellow"});
+    const center = new THREE.Mesh(geometry, material);
+    scene.add(center);
+
     const sphere = () => {
         const geometry = new THREE.SphereGeometry(radius);
-        const material = new THREE.MeshPhongMaterial();
-        const mesh = new THREE.Mesh( geometry, material );
+        const material = new THREE.MeshToonMaterial();
+        const mesh = new THREE.Mesh(geometry, material);
         return mesh;
     }
 
