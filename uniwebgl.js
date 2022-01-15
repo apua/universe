@@ -28,8 +28,8 @@ export function init (points, color) {
     /* create light */
     {
       const pointLight = new THREE.PointLight();
-      pointLight.position.set(0,0,width/2);
-      pointLight.distance = width;
+      pointLight.position.set(0,0,width);
+      pointLight.distance = width * 2;
       scene.add(pointLight);
 
       //const sphereSize = 15;
