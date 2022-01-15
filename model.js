@@ -205,6 +205,7 @@ function* transform(points, gen_point, steps) {
 const stars_radius_ratio = 0.9;
 const point_radius = 15 /* px */;
 export default class Model extends EventTarget {
+    #rotate_iter;
     #point_iter;
     constructor({amount, shape, margin_offset_width}) {
         super();
@@ -224,11 +225,16 @@ export default class Model extends EventTarget {
         this.amount = amount;
 
         // initialize point iterator
-        // NOTE: make "switching iterator" internally to prevent broken by direct reference on the iterator
-        //this.point_iter = rotate_axes(points);
+        // keep the reference internally for later swiching iterator
+        this.#rotate_iter = rotate_axes(points);
+        // make switching iterator internally to prevent broken by direct reference on the iterator
+        this.#point_iter = this.#rotate_iter;
         const _this = this;
-        this.#point_iter = (function*() { yield _this.points; yield* rotate_axes(points) })();
-        this.point_iter = (function* () {for (;;) { yield _this.#point_iter.next().value; }})();
+        this.point_iter = (function* () {
+            yield _this.points;
+            // iterate one by one rather than `yield* iterator` to switch iterator by reference
+            for (;;) yield _this.#point_iter.next().value;
+        })();
 
         // initialize color iterator
         this.color_iter = color_gen();
@@ -262,19 +268,19 @@ export default class Model extends EventTarget {
         return this.gen_point.name;
     }
     set shape(name) {
-        if (name in this.point_generators) {
-            this.gen_point = this.point_generators[name];
-            const trans_iter = transform(this.points, this.gen_point, 25);
-            const _this = this, rotate_iter = this.#point_iter;
-            this.#point_iter = (function* () {
-                while (! trans_iter.next().done)
-                    yield rotate_iter.next().value;
+        if (name in this.point_generators) {} else
+            return /* silent pass */;
 
-                _this.dispatchEvent(new Event("shapechanged"));
-                _this.#point_iter = rotate_iter;
-                yield _this.#point_iter.next().value;
-            })();
-        } else {}
+        const trans_iter = transform(this.points, this.point_generators[name], 25);
+        const _this = this;
+        this.#point_iter = (function* () {
+            while (! trans_iter.next().done)
+                yield _this.#rotate_iter.next().value;
+
+            _this.dispatchEvent(new Event("shapechanged"));
+            _this.#point_iter = _this.#rotate_iter;
+            yield _this.#point_iter.next().value;
+        })();
     }
 };
 
