@@ -271,7 +271,8 @@ export default class Model extends EventTarget {
         if (name in this.point_generators) {} else
             return /* silent pass */;
 
-        const trans_iter = transform(this.points, this.point_generators[name], 25);
+        this.gen_point = this.point_generators[name];
+        const trans_iter = transform(this.points, this.gen_point, 25);
         const _this = this;
         this.#point_iter = (function* () {
             while (! trans_iter.next().done)
