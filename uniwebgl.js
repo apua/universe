@@ -62,7 +62,7 @@ export function init (points, color) {
                 stars.add(sphere());
         else /* N < 0 */
             for (let i=N; i++;)
-                stars.remove[stars.children[0]];
+                stars.remove(stars.children[0]);
 
         const [rr,gg,bb] = [r/255, g/255, b/255];
         points.forEach(([x,y,z],i) => {
