@@ -7,7 +7,7 @@ export class PointGenerators {
         const R = this.#R;
         const th = Math.random() * 2 * Math.PI;
         const th2 = Math.sqrt(Math.random()) * Math.PI / 2;
-        const half = parseInt(Math.random()*2);
+        const half = Number.parseInt(Math.random()*2);
         let nx,ny,nz;
         if (half == 0) {
             nx = R * Math.sin(th2) * Math.cos(th);
@@ -76,7 +76,7 @@ export class PointGenerators {
     }
     "2sphere" = () => {
         const R = this.#R;
-        const ball = parseInt(Math.random() * 2);
+        const ball = Number.parseInt(Math.random() * 2);
         const rr = R / 2;
         const cx = (ball == 0) ? R*2/3 : -R*2/3;
         const th = Math.random() * 2 * Math.PI;
