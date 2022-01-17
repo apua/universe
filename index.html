@@ -42,37 +42,61 @@
     }
     </style>
 
+    <style>
+    menu { list-style-type: none; }
+    figure { margin: 0; }
+    figcaption { text-align: center; }
+
+    @media (max-width: 768px) {
+        figure { position: relative; }
+        figcaption { position: absolute; left: 0; right: 0; text-align: center; top: 40%; }
+    }
+    </style>
+
     <!-- list dependent modules to fetch parallel -->
     <script type="module" src="./unittest.js"></script>
     <script type="module" src="./main.js"></script>
   </head>
   <body>
-    <!-- amount configuration -->
-    <div>
-      <label for="amount">Amount</label>
-      <input id="amount" type="number" inputmode="numeric">
-    </div>
+    <menu>
+      <!-- amount configuration -->
+      <li>
+        <label for="amount">Amount</label>
+        <input id="amount" type="number" inputmode="numeric">
+      </li>
 
-    <!-- shape selection -->
-    <div>
-      <label for="shape">Shape</label>
-      <select id="shape"></select>
-      <template id="shape-option">
-        <option value="shape_index">shape_name</option>
-      </template>
-    </div>
+      <!-- shape selection -->
+      <li>
+        <label for="shape">Shape</label>
+        <select id="shape"></select>
+        <template id="shape-option">
+          <option value="shape_index">shape_name</option>
+        </template>
+      </li>
+    </menu>
 
-    <canvas id="uniwebgl"></canvas>
+    <figure>
+      <canvas id="uniwebgl" title="canvas"></canvas>
+      <figcaption>Canvas 3D</figcaption>
+    </figure>
 
-    <svg id="unisvg">
-      <rect x="0" y="0" width="100%" height="100%" fill="rgba(0,0,0,0.5)" />
-      <g id="circles" />
-    </svg>
+    <figure>
+      <svg id="unisvg">
+        <rect x="0" y="0" width="100%" height="100%" fill="rgba(0,0,0,0.5)" />
+        <g id="circles" />
+      </svg>
+      <figcaption>SVG</figcaption>
+    </figure>
 
-    <canvas id="unicanvas"></canvas>
+    <figure>
+      <canvas id="unicanvas"></canvas>
+      <figcaption>Canvas 2D</figcaption>
+    </figure>
 
-    <!-- draw universe in DOM -->
-    <div id="universe"></div>
+    <figure>
+      <div id="universe"></div>
+      <figcaption>CSS</figcaption>
+    </figure>
     <template id="universe-shadowroot">
       <style>
       #sky {
