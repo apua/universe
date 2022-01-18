@@ -1,3 +1,4 @@
+import "./unittest.js";
 import Model from "./model.js";
 import * as universe from "./universe.js";
 import * as unicanvas from "./unicanvas.js";

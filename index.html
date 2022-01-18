@@ -47,14 +47,40 @@
     figure { margin: 0; }
     figcaption { text-align: center; }
 
-    @media (max-width: 768px) {
-        figure { position: relative; }
-        figcaption { position: absolute; left: 0; right: 0; text-align: center; top: 40%; }
+    @media (orientation: portrait) {
+      @media (max-width: 768px) {
+        menu:before { content: "iPhon13 mini portrait"; }
+      }
+      @media (min-width: 769px) {
+        menu:before { content: "iPad mini portrait"; }
+      }
+    }
+    @media (orientation: landscape) {
+      @media (max-height: 768px) {
+        menu:before { content: "iPhone13 mini landscape"; }
+      }
+      @media (min-height: 769px) {
+        menu:before { content: "iPad mini landscape"; }
+      }
     }
     </style>
+    <script type="module">
+      matchMedia("(orientation: portrait) and (max-width: 768px)").addEventListener("change", event => {
+        if (event.matches) console.log("redraw for iphone portrait");
+      });
+      matchMedia("(orientation: landscape) and (max-height: 768px)").addEventListener("change", event => {
+        if (event.matches) console.log("redraw for iphone landscape");
+      });
+      matchMedia("(orientation: portrait) and (min-height: 769px)").addEventListener("change", event => {
+        if (event.matches) console.log("redraw for ipad portrait");
+      });
+      matchMedia("(orientation: landscape) and (min-height: 769px)").addEventListener("change", event => {
+        if (event.matches) console.log("redraw for ipad landscape");
+      });
+    </script>
 
     <!-- list dependent modules to fetch parallel -->
-    <script type="module" src="./unittest.js"></script>
+    <script type="module" src="./three.js"></script>
     <script type="module" src="./main.js"></script>
   </head>
   <body>
