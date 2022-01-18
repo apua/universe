@@ -1,3 +1,11 @@
+/*
+ * TODO:
+ * 1. move `to_style` from model to view
+ * 2. wrap `uni*.js` and methods into an object in one file
+ * 3. make `window.H` to be local
+ */
+
+import "./unittest.js";
 import Model from "./model.js";
 import * as universe from "./universe.js";
 import * as unicanvas from "./unicanvas.js";
@@ -10,11 +18,14 @@ const field_shape = document.getElementById("shape");
 /* disable inputs during init app */
 [field_amount, field_shape].forEach(field => field.disable = true);
 
+// XXX
+window.H = 360;
+
 /* init MVC model */
 const model = new Model({
     amount: 42,
-    shape: "ring",
-    margin_offset_width: Number.parseInt(document.body.offsetWidth),
+    shape: "sphere",
+    drawarea_width: window.H,
 });
 
 /* init `amount`:field: */
@@ -46,7 +57,7 @@ console.assert(field_shape.value === model.shape);
 let points = model.point_iter.next().value;
 let points_style = model.to_style(points);
 let color = model.color_iter.next().value;
-universe.init(model.point_radius, model.center_position, points_style, color);
+universe.init(model.point_radius, points_style, color);
 unicanvas.init(points, color, model.opaque);
 unisvg.init(points, color, model.opaque);
 uniwebgl.init(points, color);

@@ -7,7 +7,7 @@ export class PointGenerators {
         const R = this.#R;
         const th = Math.random() * 2 * Math.PI;
         const th2 = Math.sqrt(Math.random()) * Math.PI / 2;
-        const half = parseInt(Math.random()*2);
+        const half = Number.parseInt(Math.random()*2);
         let nx,ny,nz;
         if (half == 0) {
             nx = R * Math.sin(th2) * Math.cos(th);
@@ -76,7 +76,7 @@ export class PointGenerators {
     }
     "2sphere" = () => {
         const R = this.#R;
-        const ball = parseInt(Math.random() * 2);
+        const ball = Number.parseInt(Math.random() * 2);
         const rr = R / 2;
         const cx = (ball == 0) ? R*2/3 : -R*2/3;
         const th = Math.random() * 2 * Math.PI;
@@ -207,11 +207,12 @@ const point_radius = 15 /* px */;
 export default class Model extends EventTarget {
     #rotate_iter;
     #point_iter;
-    constructor({amount, shape, margin_offset_width}) {
+    constructor({amount, shape, drawarea_width}) {
         super();
 
-        console.assert(Number.isInteger(margin_offset_width) && margin_offset_width > 0);
-        const shape_radius = margin_offset_width * 0.5 * stars_radius_ratio;
+        console.assert(Number.isInteger(drawarea_width) && drawarea_width > 0);
+        const shape_radius = drawarea_width * 0.5 * stars_radius_ratio;
+        console.log('shape_radius', shape_radius);
         const point_generators = new PointGenerators(shape_radius);
 
         // initialize point generator
@@ -240,15 +241,13 @@ export default class Model extends EventTarget {
         this.color_iter = color_gen();
 
         // generate "coordinates -> CSS style"
-        const cx = margin_offset_width * 0.5 - point_radius, cy = cx;
-        const center_position = [cx,cy];
+        const cx = drawarea_width * 0.5 - point_radius, cy = cx;
         const opaque = opaque_by(shape_radius);
         this.opaque = opaque;
         this.to_style = ps => ps.map(([x,y,z]) => [y+cy, x+cx, Number.parseInt(z), opaque(z)]);
 
         // export information
         this.point_radius = point_radius;
-        this.center_position = center_position;
         this.point_generators = point_generators;
     }
     get amount() {
@@ -289,13 +288,11 @@ test.add(() => {
     const model = new Model({
         amount: 42,
         shape: "ring",
-        margin_offset_width: Number.parseInt(document.body.offsetWidth),
+        drawarea_width: Number.parseInt(document.body.offsetWidth),
     });
 
     assert(model.amount === 42);
     assert(model.shape === "ring");
-    const width = Number.parseInt(document.body.offsetWidth);
-    assert(model.center_position.every(v => v === width/2-15));
 
     assert(model.points.length === 42);
     model.amount = 94;
@@ -314,7 +311,7 @@ test.add(() => {
 });
 
 test.add(() => {
-    const model = new Model({amount: 1, shape: "ring", margin_offset_width: 500});
+    const model = new Model({amount: 1, shape: "ring", drawarea_width: 500});
 
     const p1 = model.points[0];
     const p2 = model.point_iter.next().value[0];

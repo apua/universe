@@ -1,10 +1,13 @@
 let stars, star_tmpl;
 
-export function init(r, [cx, cy], points_style, color) {
+export function init(r, points_style, color) {
+    const universe = document.getElementById("universe");
+    universe.style = `width: ${window.H}px;`;
+
     const root = document.getElementById("universe").attachShadow({mode: "closed"});
     root.append(document.getElementById("universe-shadowroot").content);
     root.styleSheets[0].insertRule(`.point{ width: ${r*2}px; height: ${r*2}px; }`);
-    root.getElementById("center").style = `top: ${cy}px; left: ${cx}px; background-color: yellow;`;
+    root.getElementById("center").style = `top: calc(50% - ${r}px); left: calc(50% - ${r}px); background-color: yellow;`;
 
     stars = root.getElementById("stars");
     star_tmpl = root.getElementById("star").content.firstElementChild;

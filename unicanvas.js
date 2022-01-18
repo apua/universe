@@ -5,9 +5,7 @@ export function init (points, color, opaque) {
     const ctx = canvas.getContext("2d");
     console.assert(ctx);
 
-    console.log(`width, height, ${canvas.width}, ${canvas.height}`);
-    canvas.width = canvas.height = document.body.offsetWidth;
-    console.log(`width, height, ${canvas.width}, ${canvas.height}`);
+    canvas.width = canvas.height = window.H; //document.body.offsetWidth;
 
     const r = 15;
     const draw_circle = (x,y,style) => {
