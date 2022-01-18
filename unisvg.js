@@ -1,7 +1,7 @@
 export let draw;
 
 export function init (points, color, opaque) {
-    const width = document.body.offsetWidth;
+    const width = window.H;//document.body.offsetWidth;
     const cx = width/2, cy = cx, pr = 15;
 
     const svg = document.getElementById("unisvg");

@@ -43,10 +43,13 @@
     </style>
 
     <style>
+    menu { list-style-type: none; }
+
+    figure { position: relative; margin: 0; }
+    figcaption { text-align: center; position: absolute; left: 0; right: 0; top: 130px; }
+    figure > canvas, svg, div { display: block; margin: auto; }
+
     body { display: grid; }
-    menu { list-style-type: none; grid-area: a; }
-    figure { position: relative; }
-    figcaption { text-align: center; position: absolute; left: 0; right: 0; }
     figure:nth-child(2) { grid-area: b; }
     figure:nth-child(3) { grid-area: c; }
     figure:nth-child(4) { grid-area: d; }
@@ -54,47 +57,32 @@
 
     @media (orientation: portrait) {
       @media (max-width: 768px) {
-        /*
-        menu:before { content: "iPhon13 mini portrait"; }
-        */
-        body { grid-template: "a" "b" "c" "d" "e"; }
+        body {
+          grid-template: "a" "b" "c" "d" "e";
+        }
       }
       @media (min-width: 769px) {
-        /*
-        menu:before { content: "iPad mini portrait"; }
-        */
-        body { grid-template: "a a" "b c" "b c" "d e" "d e"; }
+        body {
+          grid-template: "a a" "b c" "b c" "d e" "d e";
+          justify-content: center;
+        }
       }
     }
     @media (orientation: landscape) {
-      @media (max-height: 768px) {
-        /*
-        menu:before { content: "iPhone13 mini landscape"; }
-        */
-        body { grid-template: "a b b c c d d e e"; }
+      @media (max-width: 1080px) {
+        body {
+          grid-template: "a b b c c d d e e";
+          justify-content: left;
+        }
       }
-      @media (min-height: 769px) {
-        /*
-        menu:before { content: "iPad mini landscape"; }
-        */
-        body { grid-template: "a b b c c" 45vh "a d d e e" 45vh; }
+      @media (min-width: 1081px) {
+        body {
+          grid-template: "a b b c c" "a d d e e";
+          justify-content: left;
+        }
       }
     }
     </style>
-    <script type="module">
-      matchMedia("(orientation: portrait) and (max-width: 768px)").addEventListener("change", event => {
-        if (event.matches) console.log("redraw for iphone portrait");
-      });
-      matchMedia("(orientation: landscape) and (max-height: 768px)").addEventListener("change", event => {
-        if (event.matches) console.log("redraw for iphone landscape");
-      });
-      matchMedia("(orientation: portrait) and (min-height: 769px)").addEventListener("change", event => {
-        if (event.matches) console.log("redraw for ipad portrait");
-      });
-      matchMedia("(orientation: landscape) and (min-height: 769px)").addEventListener("change", event => {
-        if (event.matches) console.log("redraw for ipad landscape");
-      });
-    </script>
 
     <!-- list dependent modules to fetch parallel -->
     <script type="module" src="./three.js"></script>

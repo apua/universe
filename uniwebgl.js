@@ -7,7 +7,7 @@ window.renderer = undefined;
 export let draw;
 
 export function init (points, color) {
-    const width = document.body.offsetWidth, height = width;
+    const width = window.H/*document.body.offsetWidth*/, height = width;
     const right = width/2, left = -right, top = right, bottom = -top;
 
     //camera = new THREE.PerspectiveCamera();
@@ -22,7 +22,7 @@ export function init (points, color) {
     renderer.setSize(width, height);
     /* set background translucent and black */
     renderer.setClearColor("black", 0.5);
-    
+
     camera.position.z = width;
 
     /* create light */
