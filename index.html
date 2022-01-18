@@ -43,24 +43,41 @@
     </style>
 
     <style>
-    menu { list-style-type: none; }
-    figure { margin: 0; }
-    figcaption { text-align: center; }
+    body { display: grid; }
+    menu { list-style-type: none; grid-area: a; }
+    figure { position: relative; }
+    figcaption { text-align: center; position: absolute; left: 0; right: 0; }
+    figure:nth-child(2) { grid-area: b; }
+    figure:nth-child(3) { grid-area: c; }
+    figure:nth-child(4) { grid-area: d; }
+    figure:nth-child(5) { grid-area: e; }
 
     @media (orientation: portrait) {
       @media (max-width: 768px) {
+        /*
         menu:before { content: "iPhon13 mini portrait"; }
+        */
+        body { grid-template: "a" "b" "c" "d" "e"; }
       }
       @media (min-width: 769px) {
+        /*
         menu:before { content: "iPad mini portrait"; }
+        */
+        body { grid-template: "a a" "b c" "b c" "d e" "d e"; }
       }
     }
     @media (orientation: landscape) {
       @media (max-height: 768px) {
+        /*
         menu:before { content: "iPhone13 mini landscape"; }
+        */
+        body { grid-template: "a b b c c d d e e"; }
       }
       @media (min-height: 769px) {
+        /*
         menu:before { content: "iPad mini landscape"; }
+        */
+        body { grid-template: "a b b c c" 45vh "a d d e e" 45vh; }
       }
     }
     </style>
