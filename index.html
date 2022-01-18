@@ -17,9 +17,6 @@
     <!-- not use `theme-color`; just let Safari auto detect -->
     <!-- meta name="theme-color" content="#4285f4" -->
 
-    <!-- for RWD design -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <!-- for search engine results page (SERP) -->
     <meta name="description" content="meta desc">
 
@@ -34,56 +31,58 @@
 
     <!-- dark if is light mode -->
     <style>
-    @media (prefers-color-scheme: light) {
-        :root { color-scheme: dark; }
-    }
-    @supports not (color-scheme: dark) {
-        :root { background-color: #1E1E1E; color: white; }
-    }
+      @media (prefers-color-scheme: light) {
+          :root { color-scheme: dark; }
+      }
+      @supports not (color-scheme: dark) {
+          :root { background-color: #1E1E1E; color: white; }
+      }
     </style>
 
+    <!-- design style with RWD consideration -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-    menu { list-style-type: none; }
-    input { width: 120px; }
-    select { width: 120px; }
+      menu { list-style-type: none; }
+      input { width: 120px; }
+      select { width: 120px; }
 
-    figure { position: relative; margin: 0; }
-    figcaption { text-align: center; position: absolute; left: 0; right: 0; top: 130px; }
-    figure > canvas, svg, div { display: block; margin: auto; }
+      figure { position: relative; margin: 0; }
+      figcaption { text-align: center; position: absolute; left: 0; right: 0; top: 130px; }
+      figure > canvas, svg, div { display: block; margin: auto; }
 
-    body { display: grid; }
-    figure:nth-child(2) { grid-area: b; }
-    figure:nth-child(3) { grid-area: c; }
-    figure:nth-child(4) { grid-area: d; }
-    figure:nth-child(5) { grid-area: e; }
+      body { display: grid; }
+      figure:nth-child(2) { grid-area: b; }
+      figure:nth-child(3) { grid-area: c; }
+      figure:nth-child(4) { grid-area: d; }
+      figure:nth-child(5) { grid-area: e; }
 
-    @media (orientation: portrait) {
-      @media (max-width: 768px) {
-        body {
-          grid-template: "a" "b" "c" "d" "e";
+      @media (orientation: portrait) {
+        @media (max-width: 768px) {
+          body {
+            grid-template: "a" "b" "c" "d" "e";
+          }
+        }
+        @media (min-width: 769px) {
+          body {
+            grid-template: "a a" "b c" "b c" "d e" "d e";
+            justify-content: center;
+          }
         }
       }
-      @media (min-width: 769px) {
-        body {
-          grid-template: "a a" "b c" "b c" "d e" "d e";
-          justify-content: center;
+      @media (orientation: landscape) {
+        @media (max-height: 747px) { /* iPhone 13 mini landscape height is 325px */
+          body {
+            grid-template: "a b b c c d d e e";
+            justify-content: left;
+          }
+        }
+        @media (min-height: 748px) { /* iPad mini landscape height is 748px */
+          body {
+            grid-template: "a b b c c" "a d d e e";
+            justify-content: left;
+          }
         }
       }
-    }
-    @media (orientation: landscape) {
-      @media (max-height: 747px) { /* iPhone 13 mini landscape height is 325px */
-        body {
-          grid-template: "a b b c c d d e e";
-          justify-content: left;
-        }
-      }
-      @media (min-height: 748px) { /* iPad mini landscape height is 748px */
-        body {
-          grid-template: "a b b c c" "a d d e e";
-          justify-content: left;
-        }
-      }
-    }
     </style>
 
     <!-- list dependent modules to fetch parallel -->
