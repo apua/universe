@@ -244,7 +244,6 @@ export default class Model extends EventTarget {
         const cx = drawarea_width * 0.5 - point_radius, cy = cx;
         const opaque = opaque_by(shape_radius);
         this.opaque = opaque;
-        // TODO: let bycss does itself
         this.to_style = ps => ps.map(([x,y,z]) => [y+cy, x+cx, Number.parseInt(z), opaque(z)]);
 
         // export information

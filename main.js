@@ -1,3 +1,10 @@
+/*
+ * TODO:
+ * 1. move `to_style` from model to view
+ * 2. wrap `uni*.js` and methods into an object in one file
+ * 3. make `window.H` to be local
+ */
+
 import "./unittest.js";
 import Model from "./model.js";
 import * as universe from "./universe.js";
