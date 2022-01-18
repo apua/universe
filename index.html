@@ -71,13 +71,13 @@
       }
     }
     @media (orientation: landscape) {
-      @media (max-width: 1080px) {
+      @media (max-height: 747px) { /* iPhone 13 mini landscape height is 325px */
         body {
           grid-template: "a b b c c d d e e";
           justify-content: left;
         }
       }
-      @media (min-width: 1081px) {
+      @media (min-height: 748px) { /* iPad mini landscape height is 748px */
         body {
           grid-template: "a b b c c" "a d d e e";
           justify-content: left;
