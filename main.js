@@ -83,7 +83,7 @@ requestAnimationFrame(frame);
 
 /* hook events */
 field_amount.addEventListener("change", event => {
-    const value = Number.parseInt(event.target.value);
+    const value = event.target.valueAsNumber;
     console.debug(`set amount value: ${value}, type: ${typeof value}`);
     model.amount = value;
     console.debug(`amount of points: ${model.points.length}`);
